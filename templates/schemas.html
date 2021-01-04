@@ -1,0 +1,35 @@
+{% include "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row" style="margin-top: 10ch">
+            <div class="col-sm">
+                <h2 class="col-10">Data Schemas</h2>
+            </div>
+            <div class="col-2">
+                <a href="{% url 'schema_create'%}" class="btn btn-info" style="background: #5CB85C; border: 1px solid #5CB85C; color: #FFFFFF" role="button">New Schema</a>
+{#                <button class="btn btn-success justify-content-end" style="background: #5CB85C; border: 1px solid #5CB85C;" type="button">New Schema</button>#}
+            </div>
+        </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Modified</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for a in schema_list %}
+            <tr>
+                <th scope="row">{{ a.id }}</th>
+                <td><a href="{% url 'schema_datasets' a.pk %}" >{{ a.name }}</a></td>
+                <td>{{ a.modified_date }}</td>
+                <td><a href="javascript:void(0)" onclick="alert('This feature will be available soon')">Edit schema </a><a href="{% url 'schema_delete' a.pk %}" style="color: #D9534F; padding-left:3em"> Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}

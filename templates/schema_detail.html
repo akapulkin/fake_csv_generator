@@ -1,0 +1,115 @@
+{% include "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row" style="margin-top: 10ch">
+            <div class="col-sm">
+                <h2 class="col-10">New schemas</h2>
+            </div>
+
+            <div class="col-2">
+                <button class="btn btn-success justify-content-end" style="background: #5CB85C; border: 1px solid #5CB85C; " type="button">Submit</button>
+            </div>
+        </div>
+
+
+        <form class="row g-3">
+            <div class="col-md-12">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name">
+            </div>
+            <div class="col-md-12">
+                <label for="col_sep" class="form-label">Column separator</label>
+                <input type="text" class="form-control" id="col_sep">
+            </div>
+            <div class="col-md-12">
+                <label for="stringChar" class="form-label">String character</label>
+                <input type="text" class="form-control" id="stringChar">
+            </div>
+
+            <div class="container">
+                <div class="row" style="margin-top: 10ch">
+                    <div class="col-sm">
+                        <h2 class="col-12">Schemas columns</h2>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="inputAddress" class="form-label">Column name</label>
+                    <input type="text" class="form-control" id="inputAddress">
+                    <div class="col-3">
+                        <label for="inputState" class="form-label">Type</label>
+                        <select id="inputState" class="form-select">
+                            <option selected>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="inputAddress2" class="form-label">From</label>
+                        <input type="number" class="form-control" id="inputAddress2">
+                    </div>
+                    <div class="col-1">
+                        <label for="inputAddress2" class="form-label">To</label>
+                        <input type="number" class="form-control" id="inputAddress2">
+                    </div>
+                    <div class="col-2">
+                        <label for="inputAddress2" class="form-label">Order</label>
+                        <input type="number" class="form-control" id="inputAddress2">
+                    </div>
+                    <div class="col-1">
+                        <input type="text" class="form-control" id="inputAddress2">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputState" class="form-label">State</label>
+                        <select id="inputState" class="form-select">
+                            <option selected>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    <div class="card">
+        <div class="container">
+                <div class="row" style="margin-top: 10ch">
+                    <div class="col-sm">
+                        <h2 class="col-12">Schemas columns</h2>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="inputAddress" class="form-label">Column name</label>
+                    <input type="text" class="form-control" id="inputAddress">
+                    <div class="col-3">
+                        <label for="inputState" class="form-label">Type</label>
+                        <select id="inputState" class="form-select">
+                            <option selected>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="inputAddress2" class="form-label">From</label>
+                        <input type="number" class="form-control" id="inputAddress2">
+                    </div>
+                    <div class="col-1">
+                        <label for="inputAddress2" class="form-label">To</label>
+                        <input type="number" class="form-control" id="inputAddress2">
+                    </div>
+                    <div class="col-2">
+                        <label for="inputAddress2" class="form-label">Order</label>
+                        <input type="number" class="form-control" id="inputAddress2">
+                    </div>
+                    <div class="col-1">
+                        <input type="text" class="form-control" id="inputAddress2">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputState" class="form-label">State</label>
+                        <select id="inputState" class="form-select">
+                            <option selected>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                </div>
+
+    </div>
+    </div>
+{% endblock %}

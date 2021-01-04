@@ -1,0 +1,193 @@
+{% include "base.html" %}
+{% load crispy_forms_tags %}
+{% block script %}
+    <script type="text/javascript">
+
+        function submit_data() {
+            var form_data = $('#schema_form')
+            var schema_data = {
+                schema: {
+                    id_name: $('#id_name').val(),
+                    id_column_separator: $('#id_column_separator').val(),
+                    id_string_character: $('#id_string_character').val()
+                },
+                columns: {}
+            }
+            if (form_data[0].checkValidity()) {
+                var countCopies = $("[id^='new_column']");
+                countCopies.each(function () {
+                    if (this.id != 'new_column') {
+                        var column_id = this.id
+                        schema_data.columns[column_id] = {}
+                        $('#' + column_id).find("[id]").each(function () {
+                                var row_id = this.id.slice(0, -1)
+                                if (['column_name', 'type_value', 'from_range', 'to_range', 'order'].includes(row_id)) {
+                                    if (this.value != '') {
+                                        schema_data.columns[column_id][row_id] = this.value
+                                    } else {
+                                        schema_data.columns[column_id][row_id] = null
+                                    }
+
+                                }
+                                console.log(schema_data)
+                            }
+                        )
+                    }
+                })
+                var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'schema_create' %}",
+                    data: {
+                        item_text: JSON.stringify(schema_data), csrfmiddlewaretoken: CSRFtoken
+                    },
+                    success: function (resp) {
+                        if (resp.data) {
+                            window.location.href = "{% url 'schemas' %}"
+                        }else {
+                            alert("At least one column must be added");
+                        }
+                    }
+                })
+            }
+            document.forms['schema_form'].reportValidity()
+        }
+
+
+        var col_column = 1
+
+        function addColumn(selected_option) {
+            var original = document.getElementById("new_column")
+            var column_block = document.getElementById("columns_list")
+            var countCopies = $("[id^='new_column']").length + 1;
+            var cloned = original.cloneNode(true);
+            cloned.id = "new_column" + col_column;
+            $(cloned).find("[id]").each(function () {
+                if (this.id == 'type_value') {
+                    this.value = selected_option
+                }
+                if (this.id == 'delete_column') {
+                    this.onclick = function () {
+                        this.parentElement.parentElement.remove()
+                    }
+                }
+                var current = $(this);
+                var currentId = current.attr("id");
+                current.attr("id", currentId + col_column);
+                current.attr("name", currentId + col_column)
+
+            });
+            column_block.append(cloned);
+            col_column += 1;
+        }
+
+        function isNumber(n) {
+            return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
+        }
+
+        function range_options(type_value, range_id) {
+            var r_id = range_id.substr(range_id.length - 1)
+            if (isNumber(r_id) == false) {
+                r_id = ''
+            }
+            if (['text', 'int'].includes(type_value[0].value)) {
+                $('#range_from' + r_id).css('visibility', 'visible');
+                $('#range_to' + r_id).css('visibility', 'visible');
+            } else {
+                $('#range_from' + r_id).css('visibility', 'hidden');
+                $('#range_to' + r_id).css('visibility', 'hidden');
+                $('#from_range' + r_id).val(null);
+                $('#to_range' + r_id).val(null);
+            }
+        }
+
+    </script>
+
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <form class="row g-3 " id="schema_form" action="{% url 'schema_create' %}" method="post">
+            {% csrf_token %}
+            <div class="card" style="border: 0">
+                <div class="card-body">
+
+                    <div class="row" style="margin-top: 10ch">
+                        <div class="col-sm">
+                            <h2 class="col-10">New schemas</h2>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-primary justify-content-end" onclick="submit_data()" type="button">Submit
+                            </button>
+                        </div>
+                    </div>
+                    {% for field in form %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ field|as_crispy_field }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card" style="border: 0">
+                <div class="card-body" id="columns_list">
+                    <div class="row">
+                        <div class="col-sm">
+                            <h2 class="col-12">Schemas columns</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="row" id="new_column">
+                    <div class="col-4">
+                        <label for="column_name" class="form-label">Column name</label>
+                        <input required type="text" name="col_name" class="form-control" id="column_name">
+                    </div>
+                    <div class="col-3">
+                        <label for="type_value" class="form-label">Type</label>
+                        <select required id="type_value" name="type" class="form-select"
+                                onchange="range_options(this.selectedOptions, this.id)">
+                            <option value="">------------</option>
+                            {% for id, name in status %}
+                                <option value="{{ id }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-1" id="range_from" style="visibility:hidden">
+                        <label for="from_range" class="form-label">From</label>
+                        <input type="number" name="range_from" class="form-control" id="from_range">
+                    </div>
+                    <div class="col-1" id="range_to" style="visibility:hidden">
+                        <label for="to_range" class="form-label">To</label>
+                        <input type="number" name="range_to" class="form-control" id="to_range">
+                    </div>
+                    <div class="col-2">
+                        <label for="order" class="form-label">Order</label>
+                        <input required type="number" class="form-control" name="order" id="order">
+                    </div>
+                    <div class="col-1 align-self-end" style="margin-bottom: 5px;">
+                        <a id="delete_column" style="align-content: baseline; color: #D9534F;" href="javascript:void(0)">Delete </a>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit"
+                                onclick="addColumn(document.getElementById('type_value').selectedOptions[0].value)"
+                                class="btn btn-primary">Add column
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
